@@ -1403,6 +1403,11 @@
 							gridster.draggable.start(event, $el, itemOptions, item);
 						}
 					});
+
+					// THEIA CUSTOM CODE START
+					scope.$parent.$parent.$broadcast('theia.common.widgets.watchers.suspend', "suspend");
+					scope.$parent.$parent.$broadcast('theia.widget.drag.start');
+					// THEIA CUSTOM CODE END
 				}
 
 				function drag(event) {
@@ -1498,6 +1503,12 @@
 							gridster.draggable.stop(event, $el, itemOptions, item);
 						}
 					});
+
+					// THEIA CUSTOM CODE START
+					scope.$emit('theia.common.widget.changed');
+					scope.$parent.$parent.$broadcast('theia.widget.drag.stop');
+					scope.$parent.$parent.$broadcast('theia.common.widgets.watchers.suspend', "resume");
+					// THEIA CUSTOM CODE END
 				}
 
 				function mouseDown(e) {
@@ -1734,6 +1745,10 @@
 							gridster.resizable.start(e, $el, itemOptions, item); // options is the item model
 						}
 					});
+
+					// THEIA CUSTOM CODE START
+					scope.$parent.$parent.$broadcast('theia.widget.resize.start');
+					// THEIA CUSTOM CODE END
 				}
 
 				function resize(e) {
@@ -1801,6 +1816,11 @@
 							gridster.resizable.stop(e, $el, itemOptions, item); // options is the item model
 						}
 					});
+
+					// THEIA CUSTOM CODE START
+					scope.$emit('theia.common.widget.changed');
+					scope.$broadcast('theia.widget.resize.stop');
+					// THEIA CUSTOM CODE END
 				}
 
 				function mouseDown(e) {
