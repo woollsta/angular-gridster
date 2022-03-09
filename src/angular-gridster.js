@@ -1737,7 +1737,8 @@
 
 					minTop = 0,
 					maxTop = 9999,
-					minLeft = 0;
+					minLeft = 0,
+					realdocument = $document[0];
 				
 				var scrollContainer = angular.element(gridster.scrollContainerSelector).get(0) || realdocument.body;
 
