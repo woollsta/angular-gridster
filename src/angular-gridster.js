@@ -1396,7 +1396,9 @@
 				var originalCol, originalRow;
 				var inputTags = ['select', 'option', 'input', 'textarea', 'button'];
 
-				var scrollContainer = angular.element(gridster.scrollContainerSelector).get(0) || realdocument.body;
+				var getScrollContainer = function() {
+					return angular.element(gridster.scrollContainerSelector).get(0) || realdocument.body;
+				};
 
 				function dragStart(event) {
 					$el.addClass('gridster-item-moving');
@@ -1420,16 +1422,15 @@
 						oldCol = item.col,
 						hasCallback = gridster.draggable && gridster.draggable.drag,
 						scrollSensitivity = gridster.draggable.scrollSensitivity,
-						scrollSpeed = gridster.draggable.scrollSpeed,
-						scrollContainerSelector = gridster.scrollContainerSelector;
-
-					var scrollContainer = angular.element(scrollContainerSelector).get(0) || realdocument.body;
+						scrollSpeed = gridster.draggable.scrollSpeed;
 
 					var row = Math.min(gridster.pixelsToRows(elmY), gridster.maxRows - 1);
 					var col = Math.min(gridster.pixelsToColumns(elmX), gridster.columns - 1);
 
 					var itemsInTheWay = gridster.getItems(row, col, item.sizeX, item.sizeY, item);
 					var hasItemsInTheWay = itemsInTheWay.length !== 0;
+
+					var scrollContainer = getScrollContainer();
 
 					if (gridster.swapping === true && hasItemsInTheWay) {
 						var boundingBoxItem = gridster.getBoundingBox(itemsInTheWay),
@@ -1520,6 +1521,8 @@
 				}
 
 				function mouseDown(e) {
+					var scrollContainer = getScrollContainer();
+
 					if (inputTags.indexOf(e.target.nodeName.toLowerCase()) !== -1) {
 						return false;
 					}
@@ -1603,6 +1606,8 @@
 					if (!$el.hasClass('gridster-item-moving') || $el.hasClass('gridster-item-resizing')) {
 						return false;
 					}
+
+					var scrollContainer = getScrollContainer();
 
 					var maxLeft = gridster.curWidth - 1;
 					var maxTop = gridster.curRowHeight * gridster.maxRows - 1;
@@ -1717,7 +1722,7 @@
 		}
 	])
 
-	.factory('GridsterResizable', ['GridsterTouch', function(GridsterTouch) {
+	.factory('GridsterResizable', ['$document', 'GridsterTouch', function($document, GridsterTouch) {
 		function GridsterResizable($el, scope, gridster, item, itemOptions) {
 
 			function ResizeHandle(handleClass) {
@@ -1740,7 +1745,9 @@
 					minLeft = 0,
 					realdocument = $document[0];
 				
-				var scrollContainer = angular.element(gridster.scrollContainerSelector).get(0) || realdocument.body;
+				var getScrollContainer = function() {
+					return angular.element(gridster.scrollContainerSelector).get(0) || realdocument.body;
+				};
 
 				var getMinHeight = function() {
 					return (item.minSizeY ? item.minSizeY : 1) * gridster.curRowHeight - gridster.margins[0];
@@ -1858,6 +1865,8 @@
 							return;
 					}
 
+					var scrollContainer = getScrollContainer();
+
 					// save the draggable setting to restore after resize
 					savedDraggable = gridster.draggable.enabled;
 					if (savedDraggable) {
@@ -1887,6 +1896,8 @@
 				}
 
 				function mouseMove(e) {
+					var scrollContainer = getScrollContainer();
+					
 					var maxLeft = gridster.curWidth - 1;
 
 					// Get the current mouse position.
