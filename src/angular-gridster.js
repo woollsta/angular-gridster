@@ -52,7 +52,8 @@
 			enabled: true,
 			scrollSensitivity: 20, // Distance in pixels from the edge of the viewport after which the viewport should scroll, relative to pointer
 			scrollSpeed: 15 // Speed at which the window should scroll once the mouse pointer gets within scrollSensitivity distance
-		}
+		},
+		scrollContainerSelector: 'body'
 	})
 
 	.controller('GridsterCtrl', ['gridsterConfig', '$timeout',
@@ -1415,7 +1416,10 @@
 						oldCol = item.col,
 						hasCallback = gridster.draggable && gridster.draggable.drag,
 						scrollSensitivity = gridster.draggable.scrollSensitivity,
-						scrollSpeed = gridster.draggable.scrollSpeed;
+						scrollSpeed = gridster.draggable.scrollSpeed,
+						scrollContainerSelector = gridster.scrollContainerSelector;
+
+					var scrollContainer = angular.element(scrollContainerSelector).get(0) || realdocument.body;
 
 					var row = Math.min(gridster.pixelsToRows(elmY), gridster.maxRows - 1);
 					var col = Math.min(gridster.pixelsToColumns(elmX), gridster.columns - 1);
@@ -1467,15 +1471,15 @@
 					}
 
 					if (event.pageY - realdocument.body.scrollTop < scrollSensitivity) {
-						realdocument.body.scrollTop = realdocument.body.scrollTop - scrollSpeed;
+						scrollContainer.scrollTop = scrollContainer.scrollTop - scrollSpeed;
 					} else if ($window.innerHeight - (event.pageY - realdocument.body.scrollTop) < scrollSensitivity) {
-						realdocument.body.scrollTop = realdocument.body.scrollTop + scrollSpeed;
+						scrollContainer.scrollTop = scrollContainer.scrollTop + scrollSpeed;
 					}
 
 					if (event.pageX - realdocument.body.scrollLeft < scrollSensitivity) {
-						realdocument.body.scrollLeft = realdocument.body.scrollLeft - scrollSpeed;
+						scrollContainer.scrollLeft = scrollContainer.scrollLeft - scrollSpeed;
 					} else if ($window.innerWidth - (event.pageX - realdocument.body.scrollLeft) < scrollSensitivity) {
-						realdocument.body.scrollLeft = realdocument.body.scrollLeft + scrollSpeed;
+						scrollContainer.scrollLeft = scrollContainer.scrollLeft + scrollSpeed;
 					}
 
 					if (hasCallback || oldRow !== item.row || oldCol !== item.col) {
