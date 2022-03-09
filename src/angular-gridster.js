@@ -1386,6 +1386,8 @@
 					lastMouseY = 0,
 					mOffX = 0,
 					mOffY = 0,
+					scrollXOff = 0,
+					scrollYOff = 0,
 
 					minTop = 0,
 					minLeft = 0,
@@ -1393,6 +1395,8 @@
 
 				var originalCol, originalRow;
 				var inputTags = ['select', 'option', 'input', 'textarea', 'button'];
+
+				var scrollContainer = angular.element(gridster.scrollContainerSelector).get(0) || realdocument.body;
 
 				function dragStart(event) {
 					$el.addClass('gridster-item-moving');
@@ -1584,6 +1588,9 @@
 					elmW = $el[0].offsetWidth;
 					elmH = $el[0].offsetHeight;
 
+					scrollXOff = scrollContainer.scrollLeft || 0;
+					scrollYOff = scrollContainer.scrollTop || 0;
+
 					originalCol = item.col;
 					originalRow = item.row;
 
@@ -1604,14 +1611,22 @@
 					mouseX = e.pageX;
 					mouseY = e.pageY;
 
+					// Get the scroll deltas
+					var scrollXDelta = scrollContainer.scrollLeft - scrollXOff;
+					var scrollYDelta = scrollContainer.scrollTop - scrollYOff;
+
 					// Get the deltas
-					var diffX = mouseX - lastMouseX + mOffX;
-					var diffY = mouseY - lastMouseY + mOffY;
+					var diffX = mouseX - lastMouseX + mOffX + scrollXDelta;
+					var diffY = mouseY - lastMouseY + mOffY + scrollYDelta;
 					mOffX = mOffY = 0;
 
 					// Update last processed mouse positions.
 					lastMouseX = mouseX;
 					lastMouseY = mouseY;
+
+					// Update scroll offsets
+					scrollXOff = scrollContainer.scrollLeft;
+					scrollYOff = scrollContainer.scrollTop;
 
 					var dX = diffX,
 						dY = diffY;
@@ -1717,10 +1732,14 @@
 					lastMouseY = 0,
 					mOffX = 0,
 					mOffY = 0,
+					scrollXOff = 0,
+					scrollYOff = 0,
 
 					minTop = 0,
 					maxTop = 9999,
 					minLeft = 0;
+				
+				var scrollContainer = angular.element(gridster.scrollContainerSelector).get(0) || realdocument.body;
 
 				var getMinHeight = function() {
 					return (item.minSizeY ? item.minSizeY : 1) * gridster.curRowHeight - gridster.margins[0];
@@ -1855,6 +1874,9 @@
 					elmW = $el[0].offsetWidth;
 					elmH = $el[0].offsetHeight;
 
+					scrollXOff = scrollContainer.scrollLeft || 0;
+					scrollYOff = scrollContainer.scrollTop || 0;
+
 					originalWidth = item.sizeX;
 					originalHeight = item.sizeY;
 
@@ -1870,14 +1892,22 @@
 					mouseX = e.pageX;
 					mouseY = e.pageY;
 
+					// Get the scroll deltas
+					var scrollXDelta = scrollContainer.scrollLeft - scrollXOff;
+					var scrollYDelta = scrollContainer.scrollTop - scrollYOff;
+
 					// Get the deltas
-					var diffX = mouseX - lastMouseX + mOffX;
-					var diffY = mouseY - lastMouseY + mOffY;
+					var diffX = mouseX - lastMouseX + mOffX + scrollXDelta;
+					var diffY = mouseY - lastMouseY + mOffY + scrollYDelta;
 					mOffX = mOffY = 0;
 
 					// Update last processed mouse positions.
 					lastMouseX = mouseX;
 					lastMouseY = mouseY;
+
+					// Update scroll offsets
+					scrollXOff = scrollContainer.scrollLeft;
+					scrollYOff = scrollContainer.scrollTop;
 
 					var dY = diffY,
 						dX = diffX;
